@@ -3,8 +3,7 @@
 \name{minimize}
 \alias{minimize}
 \alias{maximize}
-\title{Optimize a problem.
-Minimize or maximize a problem.}
+\title{Optimize a problem.}
 \usage{
 minimize(
   .problem,
@@ -31,19 +30,18 @@ objective value by a factor of \code{reltol * (abs(val) + reltol)} at a step.}
 \item{abs_tol}{The absolute convergence tolerance.
 The algorithm stops if the objective value is better than \code{abs_tol}.}
 
-\item{method}{The method to be used. See details in \code{\link[base:optim]{base::optim()}}.}
+\item{method}{The method to be used. See details in \code{\link[stats:optim]{stats::optim()}}.}
 
-\item{...}{Other arguments passed to \code{\link[base:optim]{base::optim()}}.}
+\item{...}{Other arguments passed to \code{\link[stats:optim]{stats::optim()}}.}
 }
 \value{
 A list with elements:
 \itemize{
-\item \verb{$internal}: The output of \code{\link[base:optim]{base::optim()}}.
+\item \verb{$internal}: The output of \code{\link[stats:optim]{stats::optim()}}.
 \item \verb{$objective_value}: Numeric, the value of the function at the optimum.
 \item \verb{$solution}: Named list of numbers, the value of each variable at the optimum.
 }
 }
 \description{
-Optimize a problem.
 Minimize or maximize a problem.
 }

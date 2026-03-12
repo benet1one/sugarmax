@@ -21,8 +21,8 @@ objective <- function(fun) {
 #' @param .problem Problem created with [objective()].
 #' @param symbol Name of the parameter in the objective function. Does not need to be a string.
 #' @param dimensions Integer vector of length one or more giving the maximal indices in each dimension.
-#' For instance, a scalar has a dimension of `1`, a vector of n elements has a dimension of `n`,
-#' and an n \times m matrix has a dimension of `c(n, m)`.
+#' For instance, a scalar has a dimension of `1`, a vector of N elements has a dimension of `N`,
+#' and an NxM matrix has a dimension of `c(N, M)`.
 #' @param lower Lower bound for the variable. Can be a scalar or an array of `dim = dimensions`.
 #' @param upper Upper bound for the variable. Can be a scalar or an array of `dim = dimensions`.
 #' @param inits Initial value for the variable. Can be a scalar or an array of `dim = dimensions`.
@@ -34,7 +34,7 @@ objective <- function(fun) {
 variable <- function(.problem, symbol, dimensions = 1, lower = -Inf, upper = +Inf, inits = NA) {
     symbol <- rlang::ensym(symbol) |> format()
     stopifnot(
-        symbol %in% formalArgs(.problem$fun),
+        symbol %in% methods::formalArgs(.problem$fun),
         rlang::is_integerish(dimensions, finite = TRUE),
         is.numeric(lower),
         is.numeric(upper),
@@ -100,11 +100,11 @@ variable_environment <- function(x, variables) {
 #' objective value by a factor of `reltol * (abs(val) + reltol)` at a step.
 #' @param abs_tol The absolute convergence tolerance.
 #' The algorithm stops if the objective value is better than `abs_tol`.
-#' @param method The method to be used. See details in [base::optim()].
-#' @param ... Other arguments passed to [base::optim()].
+#' @param method The method to be used. See details in [stats::optim()].
+#' @param ... Other arguments passed to [stats::optim()].
 #'
 #' @returns A list with elements:
-#' - `$internal`: The output of [base::optim()].
+#' - `$internal`: The output of [stats::optim()].
 #' - `$objective_value`: Numeric, the value of the function at the optimum.
 #' - `$solution`: Named list of numbers, the value of each variable at the optimum.
 #' @export
@@ -167,8 +167,8 @@ maximize <- function(.problem,
         ...
     )
 
-    opt <- optim(fn = fn, par = unbound_inits, control = control,
-                 gr = gr, hessian = hessian, method = method)
+    opt <- stats::optim(fn = fn, par = unbound_inits, control = control,
+                        gr = gr, hessian = hessian, method = method)
 
     solution <- opt$par |>
         bind(lower, upper) |>
