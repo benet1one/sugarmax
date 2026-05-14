@@ -1,16 +1,16 @@
 Package: sugarmax
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Simple syntax for comfortable non-linear optimization
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "benet", ,
+      email = "benet1one@gmail.com",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Description: Lightweight wrapper around `stats::optim()` that allows 
+    multiple bounded multidimensional variables.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

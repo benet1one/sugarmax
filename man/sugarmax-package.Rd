@@ -4,12 +4,12 @@
 \name{sugarmax-package}
 \alias{sugarmax}
 \alias{sugarmax-package}
-\title{sugarmax: What the Package Does (Title Case)}
+\title{sugarmax: Simple syntax for comfortable non-linear optimization.}
 \description{
-More about what it does (maybe more than one line). Continuation lines should be indented.
+Lightweight wrapper around `stats::optim()` that allows multiple bounded multidimensional variables.
 }
 \author{
-\strong{Maintainer}: Jane Doe \email{jane@example.com}
+\strong{Maintainer}: benet \email{benet1one@gmail.com}
 
 }
 \keyword{internal}
