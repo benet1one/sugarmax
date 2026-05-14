@@ -34,12 +34,19 @@ objective <- function(fun) {
 variable <- function(.problem, symbol, dimensions = 1, lower = -Inf, upper = +Inf, inits = NA) {
     symbol <- rlang::ensym(symbol) |> format()
     stopifnot(
-        symbol %in% methods::formalArgs(.problem$fun),
         rlang::is_integerish(dimensions, finite = TRUE),
         is.numeric(lower),
         is.numeric(upper),
         is.numeric(inits) || all(is.na(inits))
     )
+
+    f_args <- methods::formalArgs(.problem$fun)
+
+    if (!is.element(symbol, f_args)) {
+        rlang::abort(glue::glue(
+            "`{symbol}` is not a parameter in the objective function."
+        ))
+    }
 
     if (length(lower) == 1L)
         lower <- array(lower, dim = dimensions)
