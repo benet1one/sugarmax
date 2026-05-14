@@ -7,22 +7,26 @@
 \usage{
 minimize(
   .problem,
+  method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
   rel_tol = sqrt(.Machine$double.eps),
   abs_tol = NULL,
-  method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
+  max_iter = 500,
   ...
 )
 
 maximize(
   .problem,
+  method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
   rel_tol = sqrt(.Machine$double.eps),
   abs_tol = NULL,
-  method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
+  max_iter = 500,
   ...
 )
 }
 \arguments{
 \item{.problem}{Problem created with \code{\link[=objective]{objective()}} and \code{\link[=variable]{variable()}}.}
+
+\item{method}{The method to be used. See details in \code{\link[stats:optim]{stats::optim()}}.}
 
 \item{rel_tol}{Relative convergence tolerance. The algorithm stops if it is unable to improve the
 objective value by a factor of \code{reltol * (abs(val) + reltol)} at a step.}
@@ -30,7 +34,7 @@ objective value by a factor of \code{reltol * (abs(val) + reltol)} at a step.}
 \item{abs_tol}{The absolute convergence tolerance.
 The algorithm stops if the objective value is better than \code{abs_tol}.}
 
-\item{method}{The method to be used. See details in \code{\link[stats:optim]{stats::optim()}}.}
+\item{max_iter}{Maximum number of iterations.}
 
 \item{...}{Other arguments passed to \code{\link[stats:optim]{stats::optim()}}.}
 }

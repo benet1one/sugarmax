@@ -59,8 +59,6 @@ variable <- function(.problem, symbol, dimensions = 1, lower = -Inf, upper = +In
     upper <- as.array(upper)
     inits <- as.array(inits)
 
-    # browser()
-
     stopifnot(
         all(dim(lower) == dimensions),
         all(dim(upper) == dimensions),
@@ -92,7 +90,7 @@ variable <- function(.problem, symbol, dimensions = 1, lower = -Inf, upper = +In
     .problem
 }
 
-variable_environment <- function(x, variables) {
+variable_list <- function(x, variables) {
     lapply(variables, \(v) array(x[v$indices], dim = v$dimensions))
 }
 
@@ -103,11 +101,12 @@ variable_environment <- function(x, variables) {
 #' @rdname solve
 #'
 #' @param .problem Problem created with [objective()] and [variable()].
+#' @param method The method to be used. See details in [stats::optim()].
 #' @param rel_tol Relative convergence tolerance. The algorithm stops if it is unable to improve the
 #' objective value by a factor of `reltol * (abs(val) + reltol)` at a step.
 #' @param abs_tol The absolute convergence tolerance.
 #' The algorithm stops if the objective value is better than `abs_tol`.
-#' @param method The method to be used. See details in [stats::optim()].
+#' @param max_iter Maximum number of iterations.
 #' @param ... Other arguments passed to [stats::optim()].
 #'
 #' @returns A list with elements:
@@ -118,29 +117,36 @@ variable_environment <- function(x, variables) {
 #'
 #' @examples
 minimize <- function(.problem,
-                     rel_tol = sqrt(.Machine$double.eps), abs_tol = NULL,
                      method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
+                     rel_tol = sqrt(.Machine$double.eps),
+                     abs_tol = NULL,
+                     max_iter = 500,
                      ...) {
     .solve(
         .problem,
         .maximize = FALSE,
+        method = method,
         rel_tol = rel_tol,
         abs_tol = abs_tol,
-        method = method,
+        max_iter = max_iter,
         ...
     )
 }
 #' @rdname solve
+#' @export
 maximize <- function(.problem,
-                     rel_tol = sqrt(.Machine$double.eps), abs_tol = NULL,
                      method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
+                     rel_tol = sqrt(.Machine$double.eps),
+                     abs_tol = NULL,
+                     max_iter = 500,
                      ...) {
     .solve(
         .problem,
         .maximize = TRUE,
+        method = method,
         rel_tol = rel_tol,
         abs_tol = abs_tol,
-        method = method,
+        max_iter = max_iter,
         ...
     )
 }
@@ -150,7 +156,9 @@ maximize <- function(.problem,
                    method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
                    gr = NULL, hessian = FALSE,
                    rel_tol = sqrt(.Machine$double.eps),
-                   abs_tol = NULL, ...) {
+                   abs_tol = NULL,
+                   max_iter = 500,
+                   ...) {
 
     vars <- .problem$variables
     lower <- sapply(vars, \(v) v$lower) |> unlist()
@@ -163,14 +171,15 @@ maximize <- function(.problem,
 
     fn <- function(unbound_x) {
         bound_x <- bind(unbound_x, lower, upper)
-        env <- variable_environment(bound_x, vars)
-        do.call(.problem$fun, env)
+        vars <- variable_list(bound_x, vars)
+        do.call(.problem$fun, vars)
     }
 
     control <- list(
         fnscale = if (.maximize) -1  else +1,
         reltol = rel_tol,
         abstol = abs_tol,
+        maxit = max_iter,
         ...
     )
 
@@ -179,7 +188,7 @@ maximize <- function(.problem,
 
     solution <- opt$par |>
         bind(lower, upper) |>
-        variable_environment(vars)
+        variable_list(vars)
 
     list(
         internal = opt,
